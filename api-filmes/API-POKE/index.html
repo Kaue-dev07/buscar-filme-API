@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon API</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1><img src="pokeapi_256.png" alt="">API de Pokémon para meu mano will </h1>
+        <div class="container-buscar">
+            <input type="text" id="pokemonName" placeholder="Digite o nome exato do Pokémon">
+            <button onclick="fetchPokemon()">Buscar</button>
+        </div>
+        <div id="pokemonData"></div>
+
+
+        <script>
+            async function fetchPokemon() {
+            const name = document.getElementById('pokemonName').value.toLowerCase();
+            const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
+            const pokemonDataDiv = document.getElementById('pokemonData');
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                throw new Error('Pokémon não encontrado');
+                }
+                const data = await response.json();
+
+                // Exibir os dados do Pokémon
+                pokemonDataDiv.innerHTML = `
+                <h2>${data.name.toUpperCase()}</h2>
+                <img src="${data.sprites.front_default}" alt="${data.name}">
+                <p>Tipo: ${data.types.map(t => t.type.name).join(', ')}</p>
+                <p>Altura: ${data.height / 10} m</p>
+                <p>Peso: ${data.weight / 10} kg</p>
+                `;
+            } catch (error) {
+                pokemonDataDiv.innerHTML = `<p style="color: red;">${error.message}</p>`;
+            }
+            }
+        </script>
+    </div>
+</body>
+</html>
